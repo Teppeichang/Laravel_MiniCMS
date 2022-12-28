@@ -9,13 +9,17 @@ use App\Models\Post;
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * 一覧画面
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        // 公開・新しい順に表示
+        $posts = Post::where('is_public', true)
+                ->orderBy('published_at', 'desc')
+                ->paginate(10);
+
+        return view('front.posts.index', compact('posts'));
     }
 
     /**
@@ -40,14 +44,15 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
+     * 詳細画面
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(int $id)
     {
-        //
+        $post = Post::where('is_public', true)->findOrFail($id);
+
+        return view('front.posts.show', compact('post'));
     }
 
     /**

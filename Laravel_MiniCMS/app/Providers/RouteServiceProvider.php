@@ -31,10 +31,21 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')
+                ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
+            // フロント画面(=一般ユーザーが閲覧できる画面)
             Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+                ->namespace($this->namespace . '\Front')
+                ->as('front.')
+                ->group(base_path('routes/front.php'));
+
+            // 管理画面
+            Route::prefix('admin')
+                ->middleware('web')
+                ->namespace($this->namespace . '\Back')
+                ->as('back.')
+                ->group(base_path('routes/back.php'));
         });
     }
 
